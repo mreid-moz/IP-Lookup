@@ -1,0 +1,64 @@
+<project name="ipFilter" default="jar" basedir=".">
+
+  <description>IP Filter</description>
+  <property name="src"  location="src"/>
+  <property name="classes"        		location="classes"/> 
+  <property name="lib"        			location="dev-lib"/>
+  <property name="distrib"        		location="distrib"/>
+  
+	  <target name="init" description="create timestamp and directories">
+    	<echo>Init...</echo>
+	  	
+	    <tstamp/>
+	    <mkdir dir="${classes}"/>
+	    <mkdir dir="${lib}"/>
+	    <mkdir dir="${distrib}"/>
+	  </target>
+
+	  <!--
+	       ==========================
+	            Compile the code
+	       ==========================
+	  -->
+  <target name="compile" depends="init" description="compile the source " >
+    <echo>Compiling IPFilter...</echo>
+    <javac srcdir="${src}" 
+         destdir="${classes}"
+     debug="true">
+
+      <classpath id="cpath">
+        <fileset dir="${lib}" 		includes="*.jar"/>
+      </classpath>
+    </javac>
+  </target>
+  
+    <!-- ==========================
+	          Copy additional files
+	       ==========================
+	  -->
+
+	  <target name="copy" depends="compile" description="copy images etc to classes directory" >
+	  	<echo>Copying images etc to classes directory...</echo>
+	    <copy todir="${classes}">
+	    	<fileset 
+	    		dir="${src}" 
+	    		includes="**/*.png,**/*.xml,**/*.properties"/>
+	  	    </copy>
+	  </target>
+    
+    <!--
+	       ==========================
+	                library
+	       ==========================
+	  -->
+		
+	  <target name="jar" depends="compile, copy" description="generate ipFilter jar">
+	  	<echo>Generating ipFilter jar ...</echo>
+	  	<jar 
+	    	jarfile="${distrib}/ipFilter.jar" 
+	    	basedir="${classes}" 
+	    	includes="**/*"/>	 
+	  </target>
+			
+
+</project>
